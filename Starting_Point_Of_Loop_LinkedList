@@ -1,0 +1,36 @@
+Starting point of loop in a Linked List
+class ListNode:
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+class Solution:
+    # Function to detect the starting node of the loop using Floyd’s algorithm
+    def detectCycle(self, head):
+        # Initialize slow and fast pointers
+        slow = head
+        fast = head
+
+        # Traverse while fast and fast.next are not None
+        while fast and fast.next:
+            # Move slow one step
+            slow = slow.next
+
+            # Move fast two steps
+            fast = fast.next.next
+
+            # If they meet, there is a cycle
+            if slow == fast:
+                # Reset slow to head
+                slow = head
+
+                # Move both pointers one step to find entry point
+                while slow != fast:
+                    slow = slow.next
+                    fast = fast.next
+
+                # Return starting node of cycle
+                return slow
+
+        # No cycle found
+        return None
