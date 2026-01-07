@@ -1,0 +1,46 @@
+Find pairs with given sum in doubly linked list
+
+
+from typing import Optional
+
+
+from typing import List
+
+"""
+
+Definition for singly Link List Node
+class Node:
+    def __init__(self,x):
+        self.data=x
+        self.next=None
+        self.prev=None
+
+You can also use the following for printing the link list.
+displayList(node)
+"""
+
+class Solution:
+    def findPairsWithGivenSum(self, target : int, head : Optional['Node']) -> List[List[int]]:
+        # code here
+        def findTail(head):
+            if head is None:
+                return None
+            current = head
+            while current.next:
+                current = current.next
+            return current
+        left = head
+        right = findTail(head)
+        res = []
+        while left.data < right.data:
+            if left.data + right.data == target:
+                res.append((left.data, right.data))
+                left = left.next
+                right = right.prev
+            elif left.data + right.data < target:
+                left = left.next
+            else:
+                right = right.prev
+        return res
+        
+        
