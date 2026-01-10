@@ -1,0 +1,32 @@
+Merge k Sorted Lists
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        def mergeList(list1):
+            import queue
+            pq = queue.PriorityQueue()
+            id = 0
+
+            for i in list1:
+                if i:
+                    pq.put((i.val, id, i))
+                    id += 1
+            dummyNode = ListNode(-1)
+            temp = dummyNode
+
+            while not pq.empty():
+                _, _, currentNode = pq.get()
+                if currentNode.next:
+                    pq.put((currentNode.next.val, id, currentNode.next))
+                    id += 1
+                temp.next = currentNode
+                temp = temp.next
+            return dummyNode.next
+        return mergeList(lists)
+
+        
