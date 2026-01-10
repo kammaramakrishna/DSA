@@ -1,0 +1,77 @@
+Flatten a Multilevel Doubly Linked List
+Note: Striver and Leetcode 430 problems are different
+
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, prev, next, child):
+        self.val = val
+        self.prev = prev
+        self.next = next
+        self.child = child
+"""
+
+class Solution:
+    def flatten(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        def merge2list(list1, list2):
+            curr = list1
+            while curr.next:
+                curr = curr.next
+
+            curr.next = list2
+            if list2:
+                list2.prev = curr
+
+            return list1
+
+        if head is None:
+            return head
+
+        curr = head
+        while curr:
+            if curr.child:
+                childHead = self.flatten(curr.child)
+                nextNode = curr.next
+
+                # attach child list
+                curr.next = childHead
+                childHead.prev = curr
+                curr.child = None
+
+                # attach remaining list
+                if nextNode:
+                    merge2list(childHead, nextNode)
+
+            curr = curr.next
+
+        return head
+        # def merge2list(list1, list2):
+        #     dummyNode = Node(-1)
+        #     res = dummyNode
+        #     while list1 != None and list2 != None:
+        #         if list1.val < list2.val:
+        #             res.child = list1
+        #             list1.prev = res
+        #             res = list1
+        #             list1 = list1.child
+        #         else:
+        #             res.child = list2
+        #             list2.prev = res
+        #             res = list2
+        #             list2 = list2.child
+        #     res.next = None
+        #     if list1:
+        #         res.child = list1
+        #         list1.prev = res
+        #     else:
+        #         res.child = list2
+        #         list2.prev = res
+        #     if dummyNode.child:
+        #         dummyNode.child.next = None
+        #     return dummyNode.child
+        
+        # if head == None or head.next == None:
+        #     return head
+        # mergeNode = self.flatten(head.next)
+        # return merge2list(head, mergeNode)
+        
