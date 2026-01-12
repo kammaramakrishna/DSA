@@ -1,0 +1,37 @@
+84. Largest Rectangle in Histogram
+
+#Brute force approach
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        def nextSmallerElement(heights):
+            n = len(heights)
+            res = [n] * n
+            st = []
+            for i in range(n-1, -1, -1):
+                while st and heights[st[-1]] >= heights[i]:
+                    st.pop()
+                if st:
+                    res[i] = st[-1]
+                st.append(i)
+            return res
+        def previousSmallerElement(heights):
+            n = len(heights)
+            res = [-1] * n
+            st = []
+            for i in range(n):
+                while st and heights[st[-1]] >= heights[i]:
+                    st.pop()
+                if st:
+                    res[i] = st[-1]
+                st.append(i)
+            return res
+        
+        NSE = nextSmallerElement(heights)
+        PSE = previousSmallerElement(heights)
+        n = len(heights)
+        maxi = 0
+        for i in range(n):
+            maxi = max(maxi, heights[i] * (NSE[i] - PSE[i] - 1))
+        return maxi
+
+        
