@@ -1,0 +1,50 @@
+85. Maximal Rectangle
+
+class Solution:
+    def maximalRectangle(self, matrix: List[List[str]]) -> int:
+        def largestHistogram(height):
+            def nextSmallest(height):
+                n = len(height)
+                res = [n] * n
+                st = []
+                for i in range(n-1, -1, -1):
+                    while st and height[st[-1]] >= height[i]:
+                        st.pop()
+                    if st:
+                        res[i] = st[-1]
+                    st.append(i)
+                return res
+            def previousSmallest(height):
+                st = []
+                n = len(height)
+                res = [-1] * n
+                for i in range(n):
+                    while st and height[st[-1]] >= height[i]:
+                        st.pop()
+                    if st:
+                        res[i] = st[-1]
+                    st.append(i)
+                return res
+            n = len(height)
+            NSE = nextSmallest(height)
+            PSE = previousSmallest(height)
+            maxi = 0
+            for i in range(n):
+                maxi = max(maxi, height[i] * (NSE[i] - PSE[i] - 1))
+            return maxi
+        n = len(matrix)
+        m = len(matrix[0])
+        maxArea = 0
+        psum = [[0]*m for i in range(n)]
+        for j in range(m):
+            sum = 0
+            for i in range(n):
+                sum += int(matrix[i][j])
+                if matrix[i][j] == "0":
+                    psum[i][j] = 0
+                    sum = 0
+                else: 
+                    psum[i][j] = sum
+        for i in range(n):
+            maxArea = max(maxArea, largestHistogram(psum[i]))
+        return maxArea
