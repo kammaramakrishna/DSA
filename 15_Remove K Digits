@@ -1,0 +1,22 @@
+402. Remove K Digits
+
+class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        st = []
+        n = len(num)
+        for i in range(n):
+            while st and st[-1] > num[i] and k > 0:
+                st.pop()
+                k -= 1 
+            st.append(num[i])
+        while st and k > 0:
+            st.pop()
+            k -= 1
+        
+        res = "".join(st).lstrip("0")
+
+        if res:
+            return res
+        else:
+            return "0"
+        
