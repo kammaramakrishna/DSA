@@ -1,0 +1,44 @@
+The Celebrity Problem
+
+
+class Solution:
+    def celebrity(self, mat):
+        # code here
+        n = len(mat[0])
+        top = 0
+        down = n-1
+        while top < down:
+            #if top known down it can't be celebrity
+            if mat[top][down] == 1:
+                top += 1
+            #if top does not know down, then also not celebrity 
+            else:
+                down -= 1
+
+        candidate = top
+        for i in range(n):
+            #Diagnal check
+            if i == candidate:
+                continue
+            #candidate know i but i not know candidate
+            if mat[candidate][i] == 1 or mat[i][candidate] == 0:
+                return -1
+        return candidate
+        
+        
+        
+        
+        # knowme = [-1]*n
+        # iknow = [-1]*n
+        # for i in range(n):
+        #     for j in range(n):
+        #         if mat[i][j] == 1:
+        #             knowme[j] += 1
+        #             iknow[i] += 1
+        # for i in range(n):
+        #     if (knowme[i] == (n-1)) and (iknow[i] == 0):
+        #         return i
+        # return -1
+                    
+                    
+        
