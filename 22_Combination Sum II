@@ -1,0 +1,25 @@
+40. Combination Sum II
+
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates.sort()
+        n = len(candidates)
+        ans = []
+        ds = []
+        def helper(ind, target, candidates, ds, ans):
+            if target == 0:
+                ans.append(ds[:])
+                return
+            for i in range(ind, n):
+                if i > ind and candidates[i] == candidates[i-1]:
+                    continue
+                if candidates[i] > target:
+                    break    
+                ds.append(candidates[i])
+                helper(i + 1, target-candidates[i], candidates, ds, ans)
+                ds.pop()
+        
+        helper(0, target, candidates, ds, ans)
+        return ans
+
+        
