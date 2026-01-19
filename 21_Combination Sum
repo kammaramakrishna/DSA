@@ -1,0 +1,20 @@
+39. Combination Sum
+
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        n = len(candidates)
+        ans = []
+        ds = []
+        def helper(ind, target, candidates, ds, ans):
+            if ind == n:
+                if target == 0:
+                    ans.append(ds[:])
+                return
+            if candidates[ind] <= target:
+                ds.append(candidates[ind])
+                helper(ind, target - candidates[ind], candidates, ds, ans)
+                ds.pop()
+            helper(ind + 1, target, candidates, ds, ans)
+        helper(0, target, candidates, ds, ans)
+        return ans
+        
