@@ -1,0 +1,37 @@
+8. String to Integer (atoi)
+
+class Solution:
+    def myAtoi(self, s: str) -> int:
+        s = s.strip()
+        n = len(s)
+        if not s:
+            return 0
+        
+        sign = 1
+        i = 0
+        # To identify the + or - at the start
+        if s[i] == "-":
+            sign = -1
+            i += 1
+        elif s[i] == "+":
+            sign = 1
+            i += 1
+        
+        num = 0
+        # Read the digits
+        while i < n and s[i].isdigit():
+            num = num * 10 + int(s[i])
+            i += 1
+        
+        #Apply sign
+        num *= sign
+
+        #check the rules for min and max
+        int_min = -2**31
+        int_max = 2**31 - 1
+
+        if num < int_min:
+            return int_min
+        elif num > int_max:
+            return int_max
+        return num
