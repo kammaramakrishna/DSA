@@ -1,0 +1,22 @@
+90. Subsets II
+
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        n = len(nums)
+        res = []
+        ds = []
+        def helper(ind):
+            res.append(ds[:])
+
+            for i in range(ind, n):
+                if i >  ind and nums[i] == nums[i-1]:
+                    continue
+                ds.append(nums[i])
+                helper(i + 1)
+                ds.pop()
+
+        helper(0)
+        return res
+
+        
