@@ -1,0 +1,24 @@
+46. Permutations
+
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        n  = len(nums)
+        ds = []
+        res = []
+        mapping = {}
+        def helper(ds, mapping):
+            if len(ds) == n:
+                res.append(ds[:])
+                return
+            for i in range(n):
+                if i not in mapping:
+                    ds.append(nums[i])
+                    mapping[i] = 1
+                    helper(ds, mapping)
+                    ds.pop()
+                    mapping[i] = 0
+                    del mapping[i]
+        helper(ds, mapping)
+        return res
+
+        
