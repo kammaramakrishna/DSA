@@ -1,0 +1,21 @@
+78. Subsets
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        res = []
+        ds = []
+        def helper(ind):
+            if ind == n:
+                res.append(ds[:])
+                return
+            #include
+            ds.append(nums[ind])
+            helper(ind + 1)
+            #don't include
+            ds.pop()
+            helper(ind +1)
+        helper(0)
+        return res
+
+        
