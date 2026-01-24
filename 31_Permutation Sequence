@@ -1,0 +1,13 @@
+Permutation Sequence
+
+Brute force approach
+
+class Solution:
+    def getPermutation(self, n: int, k: int) -> str:
+        import itertools
+        l = []
+        for i in range(1, n+1):
+            l.append(i)
+        x = list(itertools.permutations(l))
+        return("".join(map(str, x[k-1])))
+        
