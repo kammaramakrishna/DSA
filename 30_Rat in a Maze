@@ -1,0 +1,42 @@
+Rat in a Maze
+
+class Solution:
+    def isSafe(self, x, y, n, maze, visited, path, res):
+        if 0<=x<n and 0<=y<n and visited[x][y] == 0 and maze[x][y] == 1:
+            return True
+        else:
+            return False
+    
+    def solve(self, x, y, n, maze, visited, path, res):
+        if x == n-1 and y == n-1:
+            res.append(path)
+            return
+        visited[x][y] = 1
+        #Down
+        if self.isSafe(x + 1, y, n, maze, visited, path, res):
+            self.solve(x+1, y, n, maze, visited, path + "D", res)
+
+        #Left
+        if self.isSafe(x, y-1, n, maze, visited, path, res):
+            self.solve(x, y-1, n, maze, visited, path + "L", res)
+        #Right
+        if self.isSafe(x, y+1, n, maze, visited, path, res):
+            self.solve(x, y+1, n, maze, visited, path + "R", res)
+            
+        #Up
+        if self.isSafe(x-1, y, n, maze, visited, path, res):
+            self.solve(x-1, y, n, maze, visited, path + "U", res)
+        
+        visited[x][y] = 0
+        
+        
+    def ratInMaze(self, maze):
+        # code here
+        n = len(maze)
+        visited = [[0]*n for _ in range(n)]
+        res = []
+        if maze[0][0] == 1:
+            self.solve(0, 0, n, maze, visited, "", res)
+        return res
+            
+        
