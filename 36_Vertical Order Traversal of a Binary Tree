@@ -1,0 +1,41 @@
+987. Vertical Order Traversal of a Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+from collections import deque, defaultdict
+class Solution:
+    def verticalTraversal(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+        
+        #this will create dict -> list of values for grouping
+        nodes = defaultdict(lambda: defaultdict(list))
+        q = deque()
+        q.append((root, 0, 0))
+
+        while q:
+            node, col, row = q.popleft()
+
+            nodes[col][row].append(node.val)
+
+            if node.left:
+                q.append((node.left, col - 1, row + 1))
+            if node.right:
+                q.append((node.right, col + 1, row + 1))
+        
+        res = []
+        #First sort the vertical lines
+        for i in sorted(nodes):
+            vertical = []
+            # sort based on levels
+            for j in sorted(nodes[i]):
+                #sort overlapping rows same row and column
+                vertical.extend(sorted(nodes[i][j]))
+            res.append(vertical)
+        return res
+        
+        
