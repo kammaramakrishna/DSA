@@ -1,0 +1,67 @@
+Tree Boundary Traversal
+
+'''
+class Node:
+    def __init__(self, val):
+        self.data = val
+        self.right = None
+        self.left = None
+'''
+
+class Solution:
+    def isLeaf(self, root):
+        if root.left == None and root.right == None:
+            return True
+        else:
+            return False
+    def addLeftBoundary(self, root, res):
+        current = root.left
+        while current:
+            if not self.isLeaf(current):
+                res.append(current.data)
+            if current.left:
+                current = current.left
+            else:
+                current = current.right
+        
+    def addLeaves(self, root, res):
+        if self.isLeaf(root):
+            res.append(root.data)
+            return
+        if root.left:
+            self.addLeaves(root.left, res)
+        if root.right:
+            self.addLeaves(root.right, res)
+        
+    def addRightBoundary(self, root, res):
+        current = root.right
+        temp = []
+        while current:
+            if not self.isLeaf(current):
+                temp.append(current.data)
+            if current.right:
+                current = current.right
+            else:
+                current = current.left
+        
+        #To store in reverse order
+        for i in range(len(temp)-1, -1, -1):
+            res.append(temp[i])
+                
+        
+    
+    def boundaryTraversal(self, root):
+        # code here
+        res = []
+        if not root:
+            return res
+        if not self.isLeaf(root):
+            res.append(root.data)
+        self.addLeftBoundary(root,res)
+        self.addLeaves(root, res)
+        self.addRightBoundary(root, res)
+        
+        return res
+        
+        
+        
