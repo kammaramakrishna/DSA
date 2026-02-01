@@ -1,0 +1,42 @@
+37. Top View of Binary Tree
+
+'''
+class Node:
+    def __init__(self, val):
+        self.data = val
+        self.left = None
+        self.right = None
+'''
+
+class Solution:
+    def topView(self, root):
+        # code here
+        ans = []
+        map = {}
+        if root is None:
+            return ans
+
+        q = deque()
+        q.append((root, 0))
+        
+        while q:
+            node, line = q.popleft()
+            
+            #if it is not visisited then add to dict
+            if line not in map:
+                map[line] = node.data
+            
+            #check left and right
+            if node.left:
+                q.append((node.left, line - 1))
+            if node.right:
+                q.append((node.right, line + 1))
+                
+        #sort it based on keys
+        for key in sorted(map.keys()):
+            ans.append(map[key])
+        return ans
+            
+        
+        
+        
