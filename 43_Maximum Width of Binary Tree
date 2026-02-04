@@ -1,0 +1,43 @@
+43_662. Maximum Width of Binary Tree
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def widthOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        if root is None:
+            return 0
+        #max_width
+        ans = 0
+        from collections import deque
+        q = deque()
+        q.append((root, 0))
+        while q:
+            size = len(q)
+            #to get minimum index in that level
+            mini_index = q[0][1]
+            first = 0
+            last = 0
+            for i in range(size):
+                #get node and relative index
+                node, index = q.popleft()
+                current_id = index - mini_index
+
+                #set first node
+                if i == 0:
+                    first = current_id
+                #last node
+                if i == size - 1:
+                    last = current_id
+                #left child
+                if node.left:
+                    q.append((node.left, (current_id * 2 + 1)))
+                #right child
+                if node.right:
+                    q.append((node.right, (current_id * 2 + 2)))
+            #update max width
+            ans = max(ans, last-first + 1)
+        return ans
