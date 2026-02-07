@@ -1,0 +1,61 @@
+46_2385. Amount of Time for Binary Tree to Be Infected
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def parentReference(self, root, parentTracker, start):
+        q = deque([root])
+        # to find the infected node not start node
+        startNode = None
+
+        while q:
+            current = q.popleft()
+
+            if current.val == start:
+                startNode = current
+
+            if current.left:
+                parentTracker[current.left] = current
+                q.append(current.left)
+            if current.right:
+                parentTracker[current.right] = current
+                q.append(current.right)
+        return startNode
+
+    def amountOfTime(self, root: Optional[TreeNode], start: int) -> int:
+        from collections import deque
+        parentTracker = {}
+
+        startNode = self.parentReference(root, parentTracker, start)
+        q = deque([startNode])
+        visited = set()
+        visited.add(startNode)
+        infection = 0
+
+        while q:
+            size = len(q)
+            spread = 0
+
+            for _ in range(size):
+                current = q.popleft()
+
+                if current.left and current.left not in visited:
+                    q.append(current.left)
+                    visited.add(current.left)
+                    spread = 1
+                if current.right and current.right not in visited:
+                    q.append(current.right)
+                    visited.add(current.right)
+                    spread = 1
+                if current in parentTracker and parentTracker[current] not in visited:
+                    q.append(parentTracker[current])
+                    visited.add(parentTracker[current])
+                    spread = 1
+            if spread:
+                infection += 1
+        return infection
+        
