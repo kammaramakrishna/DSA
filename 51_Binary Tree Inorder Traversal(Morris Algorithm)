@@ -1,0 +1,35 @@
+51_94. Binary Tree Inorder Traversal(Morris Algorithm)
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        inorder = []
+        current = root
+        while current:
+            #if there is no left then go to right most tree
+            if current.left is None:
+                inorder.append(current.val)
+                current = current.right
+            else:
+                prev = current.left
+                #if there is left visit and go to atmost right
+                #create a link to current root node
+                while prev.right and prev.right != current:
+                    prev = prev.right
+                #create a link and visit left tree
+                if prev.right is None:
+                    prev.right = current
+                    current = current.left
+                else:
+                    #left subtree is done
+                    #append and go to right part
+                    prev.right = None
+                    inorder.append(current.val)
+                    current = current.right
+        return inorder
+        
