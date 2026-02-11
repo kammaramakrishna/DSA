@@ -1,0 +1,27 @@
+55_Floor in BST
+'''
+# Node Class:
+class Node:
+    def _init_(self, val):
+        self.data = val
+        self.left = None
+        self.right = None
+'''
+
+class Solution:
+    def floor(self, root, x):
+        # code here
+        if root is None:
+            return -1
+        floor = -1
+        while root:
+            if x == root.data:
+                floor = root.data
+                return floor
+            if x > root.data:
+                floor = root.data
+                root = root.right
+            else:
+                # floot = root.data
+                root = root.left
+        return floor
