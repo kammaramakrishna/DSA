@@ -1,0 +1,28 @@
+61_Construct Binary Search Tree from Preorder Traversal
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def helper(self, a, upper_limit):
+        if self.i == len(a) or a[self.i] > upper_limit:
+            return None
+        
+        # i has to update acorss the all calls not single recursion call
+        #so shared i is used
+        root = TreeNode(a[self.i])
+        self.i += 1
+
+        root.left = self.helper(a, root.val)
+        root.right = self.helper(a, upper_limit)
+        return root
+
+    def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
+        #i is the shared variable across all
+        self.i = 0
+        return self.helper(preorder, float('inf'))
+
+        
