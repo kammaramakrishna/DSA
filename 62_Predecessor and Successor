@@ -1,0 +1,33 @@
+62_Predecessor and Successor
+
+'''
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+'''
+
+class Solution:
+    def prece(self, root, key):
+        pre = None
+        while root:
+            if key > root.data:
+                pre = root
+                root = root.right
+            else:
+                root = root.left
+        return pre
+    def succ(self, root, key):
+        suc = None
+        while root:
+            if key >= root.data:
+                root = root.right
+            else:
+                suc = root
+                root = root.left
+        return suc
+                
+    def findPreSuc(self, root, key):
+        # code here
+        return [self.prece(root, key), self.succ(root, key)]
