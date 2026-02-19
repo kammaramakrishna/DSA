@@ -1,0 +1,27 @@
+66_Largest BST
+
+class Solution:
+    class NodeValue:
+        def __init__(self, minNode, maxNode, maxSize):
+            self.minNode = minNode
+            self.maxNode = maxNode
+            self.maxSize = maxSize
+    
+    def maxSubTree(self, root):
+        if not root:
+            return self.NodeValue(float('inf'), float('-inf'), 0)
+        
+        left = self.maxSubTree(root.left)
+        right = self.maxSubTree(root.right)
+        
+        if left.maxNode < root.data and root.data < right.minNode:
+            return self.NodeValue(min(root.data, left.minNode), max(root.data, right.maxNode), left.maxSize + right.maxSize + 1)
+        
+        return self.NodeValue(float('-inf'), float('inf'), max(left.maxSize, right.maxSize))
+
+    def largestBst(self, root):
+        # Your code here
+        return self.maxSubTree(root).maxSize
+        
+        
+        
