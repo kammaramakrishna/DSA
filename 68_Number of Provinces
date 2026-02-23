@@ -1,0 +1,27 @@
+68_547. Number of Provinces
+
+class Solution:
+    def dfs(self, i, adjLS, vis):
+        vis[i] = 1
+        for j in adjLS[i]:
+            if not vis[j]:
+                self.dfs(j, adjLS, vis)
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        V = len(isConnected)
+        adjList = [[] for _ in range(V)]
+        #Convert adjacency matrix into adjacey list
+        for i in range(V):
+            for j in range(V):
+                if isConnected[i][j] == 1 and i != j:
+                    adjList[i].append(j)
+
+        #simple logic of connected component
+        visited = [0] * V
+        count = 0
+        for i in range(V):
+            if not visited[i]:
+                count += 1
+                self.dfs(i, adjList, visited)
+        return count
+
+        
