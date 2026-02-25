@@ -1,0 +1,30 @@
+70_560. Subarray Sum Equals K
+
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        n = len(nums)
+        d = {0:1} #to handle scenario like  [1,2]
+        prefix_sum = 0
+        count = 0
+        for i in range(n):
+            prefix_sum += nums[i]
+            #if already present then increment counter of dict
+            if prefix_sum - k in d:
+                count += d[prefix_sum - k]
+            #if not hashmap the prefix sum
+            d[prefix_sum] = d.get(prefix_sum, 0) + 1
+        return count
+
+
+        # n = len(nums)
+        # count = 0
+        # for i in range(n):
+        #     sum = 0
+        #     for j in range(i, n):
+        #         sum += nums[j]
+        #         if sum == k:
+        #             count += 1
+        # return count
+
+
+        
