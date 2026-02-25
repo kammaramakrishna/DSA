@@ -1,0 +1,33 @@
+71_1343. Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold
+
+class Solution:
+    def numOfSubarrays(self, arr: List[int], k: int, threshold: int) -> int:
+        n = len(arr)
+        count = 0
+        summ = 0
+        for i in range(k):
+            summ += arr[i]
+        
+        if summ/k >= threshold:
+            count += 1
+        
+        for i in range(k, n):
+            summ += arr[i]
+            summ -= arr[i-k]
+
+            if summ/k >= threshold:
+                count += 1
+        return count
+
+        # n = len(arr)
+        # final = 0
+        # for i in range(n):
+        #     count = 0
+        #     summ = 0
+        #     for j in range(i, n):
+        #         count += 1
+        #         summ += arr[j]
+        #         if count == k and (summ)/k >= threshold:
+        #             final += 1
+        # return final
+        
