@@ -1,0 +1,153 @@
+73_HIt Counter Design
+
+Approach 1:
+l = []
+def hit(timestamp):
+    l.append(timestamp)
+
+def getHits(timestamp):
+    count = 0
+    for i in range(len(l)):
+        if l[i] > timestamp - 300:
+            count += 1
+    return count
+
+
+Approach 2:
+from collections import deque
+
+class HitCounter:
+    def __init__(self):
+        self.q = deque()
+    
+    def hit(self, timestamp):
+        self.q.append(timestamp)
+    
+    def getHits(self, timestamp):
+        while self.q and self.q[0] < timestamp - 300:
+            self.q.popleft()
+        return len(self.q)
+
+
+Approach 3;
+class HitCounter:
+    def __init__(self):
+        self.bucket = [0] * 300
+        self.times = [0] * 300
+    
+    def hit(self, timestamp):
+        index = timestamp % 300
+        if self.times[index] != timestamp:
+            # New time slot - reset
+            self.times[index] = timestamp
+            self.bucket[index] = 1
+        else:
+            # Same time slot - increment
+            self.bucket[index] += 1
+    
+    def getHits(self, timestamp):
+        total = 0
+        for i in range(300):
+            if timestamp - self.times[i] < 300:
+                total += self.bucket[i]
+        return total
+
+
+How to Say:
+"The key insight of bucketing is that we only care about the last 300 seconds. So instead of storing every individual timestamp, 
+I use a circular array of size 300 where each slot represents one second. The index is timestamp mod 300. If the stored time at that slot matches the current timestamp,
+I increment the count. If it doesn't match, it means this slot is from a previous cycle so I reset it. GetHits just loops through all 300 slots
+and sums counts from valid time slots. This gives O(1) time and O(1) space regardless of traffic volume."
+
+
+
+Intutaiation:
+timestamp 1   → index 1   (1 % 300 = 1)
+timestamp 2   → index 2
+timestamp 300 → index 0   (300 % 300 = 0)
+timestamp 301 → index 1   (301 % 300 = 1)  ← reuses slot 1
+timestamp 302 → index 2
+timestamp 600 → index 0   (600 % 300 = 0)  ← reuses slot 0 again
+
+
+
+Full Example — Walk Through
+Let's say hits come in at timestamps: 1, 1, 301
+self.bucket = [0] * 300
+self.times  = [0] * 300
+
+Hit at timestamp = 1:
+index = 1 % 300 = 1
+
+self.times[1] = 0  ← current stored time
+timestamp = 1
+
+0 != 1 → NEW slot → reset
+self.times[1] = 1
+self.bucket[1] = 1
+
+State:
+times  = [0, 1, 0, 0 ...]
+bucket = [0, 1, 0, 0 ...]
+
+Hit at timestamp = 1 again:
+index = 1 % 300 = 1
+
+self.times[1] = 1  ← current stored time
+timestamp = 1
+
+1 == 1 → SAME slot → just increment
+self.bucket[1] += 1
+
+State:
+times  = [0, 1, 0, 0 ...]
+bucket = [0, 2, 0, 0 ...]
+
+Hit at timestamp = 301:
+index = 301 % 300 = 1  ← SAME index as timestamp 1
+
+self.times[1] = 1  ← stored time is still 1
+timestamp = 301
+
+1 != 301 → OLD data → RESET this slot
+self.times[1] = 301
+self.bucket[1] = 1  ← count starts fresh
+
+State:
+times  = [0, 301, 0, 0 ...]
+bucket = [0, 1,   0, 0 ...]
+This is the magic — the old count of 2 from timestamp 1 is gone. The slot now belongs to timestamp 301.
+
+
+
+getHits at timestamp = 301:
+pythonfor i in range(300):
+    if timestamp - self.times[i] < 300:
+        total += self.bucket[i]
+```
+```
+i=1 → times[1] = 301
+      301 - 301 = 0 → less than 300 ✓ → add bucket[1] = 1
+
+All other slots have times[i] = 0
+301 - 0 = 301 → not less than 300 ✗ → skip
+
+total = 1 ✅
+```
+
+---
+
+### Visual of the Circular Array
+
+Think of it like this:
+```
+Slots:      0    1    2    3  ...  299
+            ↑    ↑    ↑    ↑       ↑
+Timestamp:  300  301  302  303    599
+            ↑    ↑    ↑    ↑       ↑
+Timestamp:  600  601  602  603    899
+Same 300 slots keep getting reused in cycles. The times array acts as a label on each slot telling you which cycle it belongs to.
+
+
+
+Naive ListDequeBucketingSpaceO(N) — grows foreverO(N) — only recentO(1) — always 300hit() timeO(1)O(1)O(1)getHits() timeO(N)O(N)O(300) = O(1)Production ready❌🟡✅
