@@ -1,0 +1,60 @@
+74_994. Rotting Oranges
+
+from collections import deque
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        if not grid:
+            return 0
+        m = len(grid)
+        n = len(grid[0])
+
+        rotten = deque()
+        #Fresh  + Rotten
+        total = 0
+        #count of organges during BFS
+        count = 0
+
+        for i in range(m):
+            for j in range(n):
+                #fresh or rotten oranges
+                if grid[i][j] != 0:
+                    total += 1 
+
+                #if rotten added into queue
+                if grid[i][j] == 2:
+                    rotten.append((i,j))
+        
+        directions = [(0,1), (1,0), (0, -1), (-1, 0)]
+
+        days = 0
+        while rotten:
+            k = len(rotten)
+            count += k
+
+            #Process all organges in particular level
+            for _ in range(k):
+                x, y = rotten.popleft()
+
+                #Check all directions and bounds
+                for dx, dy in directions:
+                    nx = x + dx
+                    ny = y + dy
+                
+                    if nx < 0 or ny < 0 or nx >= m or ny >= n or grid[nx][ny] != 1:
+                        continue
+
+                    # make 1 to 2
+                    grid[nx][ny] = 2
+
+                    rotten.append((nx,ny)) 
+
+            #if queue has still rotten increment counter
+            if rotten:
+                days += 1
+
+        #if all rotten return it otherwise -1
+        if count == total:
+            return days
+        else:
+            return -1
+        
