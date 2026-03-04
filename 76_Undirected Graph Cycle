@@ -1,0 +1,38 @@
+76_Undirected Graph Cycle
+
+class Solution:
+    def detect(self, src, adj, visited):
+        visited[src] = 1
+        from collections import deque
+        q = deque()
+        q.append((src, -1))
+        
+        while q:
+            node, parent = q.popleft()
+            
+            for i in adj[node]:
+                if not visited[i]:
+                    visited[i] = 1
+                    q.append((i, node))
+                # we have to check only in front direction
+                #if already visited then loop
+                elif parent != i:
+                    return True
+        return False
+    
+	def isCycle(self, V, edges):
+	    #convert edge list into adjcency list
+	    adj = [[] for _ in range(V)]
+	    
+	    for u, v in edges:
+	        adj[u].append(v)
+	        adj[v].append(u)
+	    
+		#this is to check for the connected components graph
+		#if any one graph has cycle then make it true
+		visited = [0]*V
+		for i in range(V):
+		    if not visited[i]:
+		        if self.detect(i, adj, visited):
+		            return True
+		return False
