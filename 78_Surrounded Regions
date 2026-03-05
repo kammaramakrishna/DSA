@@ -1,0 +1,54 @@
+78_130. Surrounded Regions
+
+#intutation is to check all bounadries first
+#if any O present then make visited 1
+# don't make any change
+#otherwise make it O to X
+
+class Solution:
+    def dfs(self, row, col, visited, board, delRow, delCol):
+        visited[row][col] = 1
+        n = len(board)
+        m = len(board[0])
+
+        for i in range(4):
+            nrow = row + delRow[i]
+            ncol = col + delCol[i]
+
+            if nrow >= 0 and nrow < n and ncol >= 0 and ncol < m and not visited[nrow][ncol] and board[nrow][ncol] == "O":
+                self.dfs(nrow, ncol, visited, board, delRow, delCol)
+
+
+
+    def solve(self, board: List[List[str]]) -> None:
+        n = len(board)
+        m = len(board[0])
+        #be careful on m and n as well
+        visited = [[0 for _ in range(m)] for _ in range(n)]
+        delRow = [-1, 0, 1, 0]
+        delCol = [0, -1, 0, 1]
+
+        for j in range(m):
+            #First Row
+            if not visited[0][j] and board[0][j] == "O":
+                self.dfs(0, j, visited, board, delRow, delCol)
+            #Last Row
+            if not visited[n-1][j] and board[n-1][j] == "O":
+                self.dfs(n-1, j, visited, board, delRow, delCol)
+        
+        #columns boundaries
+        for i in range(n):
+            if not visited[i][0] and board[i][0] == "O":
+                self.dfs(i, 0, visited, board, delRow, delCol)
+            if not visited[i][m-1] and board[i][m-1] == "O":
+                self.dfs(i, m-1, visited, board, delRow, delCol)
+
+        for i in range(n):
+            for j in range(m):
+                if not visited[i][j] and board[i][j] == "O":
+                    board[i][j] = "X"
+        return board
+
+        
+
+        
