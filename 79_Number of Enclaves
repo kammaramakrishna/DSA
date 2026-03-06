@@ -1,0 +1,42 @@
+79_1020. Number of Enclaves
+
+#intutation is simple if any of the 1's connected to boundaries
+#then simply ignore that
+#which is not connected to any boundaries count it
+
+class Solution:
+    def numEnclaves(self, grid: List[List[int]]) -> int:
+        from collections import deque
+        q = deque()
+        n = len(grid)
+        m = len(grid[0])
+        visited = [[0 for _ in range(m)] for _ in range(n)]
+        for i in range(n):
+            for j in range(m):
+                # braces also important
+                if (i == 0 or j == 0 or i == n-1 or j == m-1) and grid[i][j] == 1:
+                    q.append((i,j))
+                    visited[i][j] = 1
+
+        delRow = [-1, 0, 1, 0]
+        delCol = [0, -1, 0, 1]
+
+        while q:
+            row, col = q.popleft()
+
+            for i in range(4):
+                nrow = row + delRow[i]
+                ncol = col + delCol[i]
+
+                if nrow >= 0 and nrow < n and ncol >= 0 and ncol < m and  visited[nrow][ncol] == 0 and grid[nrow][ncol] == 1:
+                    q.append((nrow, ncol))
+                    visited[nrow][ncol] = 1
+
+        count = 0 
+        for i in range(n):
+            for j in range(m):
+                if visited[i][j] == 0 and grid[i][j] == 1:
+                    count += 1
+        return count 
+
+        
