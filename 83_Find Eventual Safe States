@@ -1,0 +1,42 @@
+83_802. Find Eventual Safe States
+
+#safe node means if it doesn't have any incoming edges
+#this can be done using directed cycle approach
+class Solution:
+    def dfs(self, node, adj, visited, pathVisited, check):
+        visited[node] = 1
+        pathVisited[node] = 1
+        check[node] = 0
+
+        for i in adj[node]:
+            if not visited[i]:
+                if self.dfs(i, adj, visited, pathVisited, check) == True:
+                    return True
+            elif pathVisited[i]:
+                return True
+
+        #it didn't find any cycles
+        check[node] = 1
+        pathVisited[node] = 0
+        return False
+
+    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+        V = len(graph)
+        # adj = [[]for _ in range(V)]
+        
+        # for u, v in graph:
+        #     adj[u].append(v)
+        
+        visited = [0]*V
+        pathVisited = [0]*V
+        check = [0]*V
+        safe_node = []
+        
+        for i in range(V):
+            if not visited[i]:
+                self.dfs(i, graph, visited, pathVisited, check)
+        
+        for i in range(V):
+            if check[i] == 1:
+                safe_node.append(i)
+        return safe_node
