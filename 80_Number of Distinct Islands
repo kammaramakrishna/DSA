@@ -1,0 +1,47 @@
+80_Number of Distinct Islands
+
+#User function Template for python3
+# intutation is to compare the island that is 1's
+#similar island in another part
+#if yes consider as one
+#otherwise consider as distinct isaland
+#use tuple with list of all island
+#check direction
+#compare with base one
+
+import sys
+from typing import List
+sys.setrecursionlimit(10**8)
+class Solution:
+    def dfs(self, row, col, visited, grid, vec, row0, col0):
+        visited[row][col] = 1
+        vec.append((row - row0, col - col0))
+        
+        n = len(grid)
+        m = len(grid[0])
+        
+        delRow = [-1, 0, 1, 0]
+        delCol = [0, 1, 0, -1]
+        for i in range(4):
+            nrow = row + delRow[i]
+            ncol = col + delCol[i]
+            if nrow >= 0 and nrow < n and ncol >= 0 and ncol < m and not visited[nrow][ncol] and grid[nrow][ncol] == 1:
+                self.dfs(nrow, ncol, visited, grid, vec, row0, col0)
+        
+    def countDistinctIslands(self, grid : List[List[int]]) -> int:
+        # code here
+        n = len(grid)
+        m = len(grid[0])
+        visited = [[0 for _ in range(m)]for _ in range(n)]
+        
+        st = set()
+        for i in range(n):
+            for j in range(m):
+                if not visited[i][j] and grid[i][j] == 1:
+                    vec = []
+                    self.dfs(i, j, visited, grid, vec, i, j)
+                    st.add(tuple(vec))
+        return len(st)
+                    
+                    
+        
