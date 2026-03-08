@@ -1,0 +1,29 @@
+84_Topological Sort
+
+# all element towrds right are less than current element
+class Solution:
+    def dfs(self, node, visited, st, edges):
+        visited[node] = 1
+        for i in edges[node]:
+            if not visited[i]:
+                self.dfs(i, visited, st, edges)
+        
+        st.append(node)
+                
+                
+    def topoSort(self, V, edges):
+        # Code here
+        adj = [[] for _ in range(V)]
+        for u, v in edges:
+            adj[u].append(v)
+        
+        visited = [0]*V
+        st = []
+        for i in range(V):
+            if not visited[i]:
+                self.dfs(i, visited, st, adj)
+        ans = []
+        while st:
+            ans.append(st.pop())
+        return ans
+        
