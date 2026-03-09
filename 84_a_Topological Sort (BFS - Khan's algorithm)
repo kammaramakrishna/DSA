@@ -1,0 +1,59 @@
+84_a_Topological Sort (BFS - Khan's algorithm)
+
+# all element towrds right are less than current element
+class Solution:
+    def topoSort(self, V, edges):
+        #whenever they mentioned as V and edges
+        #create adj list first
+        adj = [[] for _ in range(V)]
+        for u,v in edges:
+            adj[u].append(v)
+        
+        
+        indegree = [0]*V
+        for i in range(V):
+            for j in adj[i]:
+                indegree[j] += 1
+        from collections import deque
+        q = deque()
+        for i in range(V):
+            if indegree[i] == 0:
+                q.append(i)
+        
+        topo = []
+        while q:
+            node = q.popleft()
+            topo.append(node)
+            
+            for i in adj[node]:
+                indegree[i] -= 1
+                if indegree[i] == 0:
+                    q.append(i)
+        return topo
+                
+        
+    # def dfs(self, node, visited, st, edges):
+    #     visited[node] = 1
+    #     for i in edges[node]:
+    #         if not visited[i]:
+    #             self.dfs(i, visited, st, edges)
+        
+    #     st.append(node)
+                
+                
+    # def topoSort(self, V, edges):
+    #     # Code here
+    #     adj = [[] for _ in range(V)]
+    #     for u, v in edges:
+    #         adj[u].append(v)
+        
+    #     visited = [0]*V
+    #     st = []
+    #     for i in range(V):
+    #         if not visited[i]:
+    #             self.dfs(i, visited, st, adj)
+    #     ans = []
+    #     while st:
+    #         ans.append(st.pop())
+    #     return ans
+        
