@@ -1,0 +1,65 @@
+82_a_Directed Graph Cycle (BFS - Khan's)
+
+class Solution:
+    def isCyclic(self, V, edges):
+        adj = [[]for _ in range(V)]
+        for u, v in edges:
+            adj[u].append(v)
+        
+        indegree = [0]*V
+        for i in range(V):
+            for j in adj[i]:
+                indegree[j] += 1
+        
+        from collections import deque
+        q = deque()
+        for i in range(V):
+            if indegree[i] == 0:
+                q.append(i)
+        
+        count = 0
+        while q:
+            node = q.popleft()
+            count += 1
+            
+            for i in adj[node]:
+                indegree[i] -= 1
+                if indegree[i] == 0:
+                    q.append(i)
+                    
+        if count == V:
+            return False
+        return True
+            
+        
+    # def dfs(self, node, edges, visited, pathVisited):
+    #     visited[node] = 1
+    #     pathVisited[node] = 1
+        
+    #     for i in edges[node]:
+    #         #if the node is not visited
+    #         if not visited[i] == 1:
+    #             if self.dfs(i, edges, visited, pathVisited) == True:
+    #                 return True
+    #         #visited in another path
+    #         #check for pathVisited
+    #         elif pathVisited[i]:
+    #             return True
+    #     pathVisited[node] = 0
+    #     return False
+        
+    # def isCyclic(self, V, edges):
+    #     # code here
+    #     visited = [0]*V
+    #     pathVisited = [0]*V
+        
+    #     #convert adj matrix into list
+    #     adj = [[] for _ in range(V)]
+    #     for u, v in edges:
+    #         adj[u].append(v)
+        
+    #     for i in range(V):
+    #         if not visited[i]:
+    #             if self.dfs(i, adj, visited, pathVisited) == True:
+    #                 return True
+    #     return False
