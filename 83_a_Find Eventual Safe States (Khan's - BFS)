@@ -1,0 +1,81 @@
+83_a_802. Find Eventual Safe States (Khan's - BFS)
+
+#BFS Version using Topological Sort
+class Solution:
+    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+        V = len(graph)
+        adjRev = [[] for _ in range(V)]
+        indegree = [0]*V
+        #this is for reverse the links
+        for i in range(V):
+            for j in graph[i]:
+                adjRev[j].append(i)
+                indegree[i] += 1
+        
+        from collections import deque
+        q = deque()
+        safeNode = []
+
+        #identify the terminal nodes
+        for i in range(V):
+            if indegree[i] == 0:
+                q.append(i)
+
+        
+        while q:
+            node = q.popleft()
+            safeNode.append(node)
+            for i in adjRev[node]:
+                #reduce the indegree
+                indegree[i] -= 1
+                #if it is 0 indegree then add it
+                if indegree[i] == 0:
+                    q.append(i)
+
+        safeNode.sort()
+        return safeNode
+        
+
+
+
+
+# #safe node means if it doesn't have any incoming edges
+# #this can be done using directed cycle approach
+# class Solution:
+#     def dfs(self, node, adj, visited, pathVisited, check):
+#         visited[node] = 1
+#         pathVisited[node] = 1
+#         check[node] = 0
+
+#         for i in adj[node]:
+#             if not visited[i]:
+#                 if self.dfs(i, adj, visited, pathVisited, check) == True:
+#                     return True
+#             elif pathVisited[i]:
+#                 return True
+
+#         #it didn't find any cycles
+#         check[node] = 1
+#         pathVisited[node] = 0
+#         return False
+
+#     def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+#         V = len(graph)
+#         # adj = [[]for _ in range(V)]
+        
+#         # for u, v in graph:
+#         #     adj[u].append(v)
+        
+#         visited = [0]*V
+#         pathVisited = [0]*V
+#         check = [0]*V
+#         safe_node = []
+        
+#         for i in range(V):
+#             if not visited[i]:
+#                 self.dfs(i, graph, visited, pathVisited, check)
+        
+#         for i in range(V):
+#             if check[i] == 1:
+#                 safe_node.append(i)
+#         return safe_node
