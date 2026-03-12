@@ -1,0 +1,101 @@
+86_Alien Dictionary
+
+class Solution:
+    
+    # Function to perform Topological Sort using Kahn's Algorithm (BFS)
+    def topo(self, V, adj):
+        
+        # Step 1: Calculate indegree for every node
+        indegree = [0]*V
+        for i in range(V):
+            for j in adj[i]:
+                indegree[j] += 1
+        
+        # Step 2: Push all nodes with indegree 0 into queue
+        from collections import deque
+        q = deque()
+        
+        for i in range(V):
+            if indegree[i] == 0:
+                q.append(i)
+        
+        topo = []   # this will store the topological ordering
+        
+        # Step 3: BFS traversal
+        while q:
+            node = q.popleft()
+            topo.append(node)
+            
+            # reduce indegree of neighbors
+            for i in adj[node]:
+                indegree[i] -= 1
+                
+                # if indegree becomes 0, push into queue
+                if indegree[i] == 0:
+                    q.append(i)
+        
+        return topo
+    
+    
+    def findOrder(self, words):
+        
+        n = len(words)
+        
+        # adjacency list for graph (26 lowercase characters)
+        adj = [[] for _ in range(26)]
+        
+        # track which characters actually appear in dictionary
+        present = [0]*26
+        
+        for w in words:
+            for ch in w:
+                present[ord(ch)-ord('a')] = 1
+        
+        # Step 1: Build graph by comparing adjacent words
+        for i in range(n-1):
+            
+            s1 = words[i]
+            s2 = words[i+1]
+            
+            length = min(len(s1), len(s2))
+            
+            # Edge Case:
+            # If word1 is longer and prefix matches word2
+            # then dictionary order is invalid
+            if len(s1) > len(s2) and s1[:length] == s2[:length]:
+                return ""
+            
+            # Find first differing character
+            for j in range(length):
+                
+                if s1[j] != s2[j]:
+                    
+                    # convert characters to graph indices
+                    u = ord(s1[j]) - ord('a')
+                    v = ord(s2[j]) - ord('a')
+                    
+                    # create directed edge
+                    adj[u].append(v)
+                    
+                    # only first different character matters
+                    break
+        
+        # Step 2: Perform Topological Sort
+        topo = self.topo(26, adj)
+        
+        ans = ""
+        count = 0
+        
+        # Step 3: Build result string using characters that appear
+        for i in topo:
+            if present[i]:
+                ans += chr(i + ord('a'))
+                count += 1
+        
+        # Step 4: Detect cycle
+        # If topological sort didn't include all characters,
+        # it means a cycle exists → no valid ordering
+        if count != sum(present):
+            return ""
+        
+        return ans
