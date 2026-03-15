@@ -1,0 +1,45 @@
+87_Shortest path in Directed Acyclic Graph
+
+#User function Template for python3
+
+from typing import List
+
+
+class Solution:
+    def topoSort(self, node, adj, visited, st):
+        visited[node] = 1
+        for v,wt in adj[node]:
+            if not visited[v]:
+                self.topoSort(v, adj, visited, st)
+        st.append(node)
+        
+    def shortestPath(self, N: int, M: int, edges: List[List[int]]) -> List[int]:
+        adj = [[] for _ in range(N)]
+        for i in range(M):
+            u = edges[i][0]
+            v = edges[i][1]
+            wt = edges[i][2]
+            adj[u].append((v, wt))
+        
+        visited = [0]*N
+        st = []
+        for i in range(N):
+            if not visited[i]:
+                self.topoSort(i, adj, visited, st)
+        
+        dist = [float('inf')]*N
+        dist[0] = 0
+        while st:
+            node = st.pop()
+            
+            for i in adj[node]:
+                v, wt = i
+                
+                if dist[node] + wt < dist[v]:
+                    dist[v] = dist[node] + wt
+                    
+        for i in range(N):
+            if dist[i] == float('inf'):
+                dist[i] = -1
+        
+        return dist            
