@@ -1,0 +1,34 @@
+88_Shortest Path in Undirected Graph
+
+#queue with node and weights
+#compare the distance and if it is less than update it
+#before that compare visited
+class Solution:
+    def shortestPath(self, V, edges, src):
+        # code here
+        N = V
+        
+        adj = [[] for _ in range(V)]
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+        
+        dist = [float('inf')]*N
+        dist[src] = 0
+        from collections import deque
+        q = deque()
+        q.append(src)
+        
+        while q:
+            node = q.popleft()
+            
+            for i in adj[node]:
+                if dist[node] + 1 < dist[i]:
+                    dist[i] = 1 + dist[node]
+                    q.append(i)
+        
+        for i in range(V):
+            if dist[i] == float('inf'):
+                dist[i] = -1
+                    
+        return dist
