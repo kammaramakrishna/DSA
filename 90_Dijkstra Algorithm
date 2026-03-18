@@ -1,0 +1,39 @@
+90_Dijkstra Algorithm
+
+#why priority queue why not BFS
+#beacuse of shortest path first pick
+#if I choose BFS it will become all paths equal priority
+
+class Solution:
+    # Returns shortest distances from src to all other vertices
+    def dijkstra(self, V, edges, src):
+        
+        adj = [[] for _ in range(V)]
+        
+        for u, v, w in edges:
+            adj[u].append((v, w))
+            adj[v].append((u, w))
+        
+        import heapq
+        pq = []
+        dist = [float('inf')]*V
+        dist[src] = 0
+        
+        heapq.heappush(pq,(0,src))
+        
+        while pq:
+            dis, node = heapq.heappop(pq)
+            
+            #skip for outdated entries
+            if dis > dist[node]:
+                continue
+            
+            for adjNode, edgeWeight in adj[node]:
+                if dis + edgeWeight < dist[adjNode]:
+                    dist[adjNode] = dis + edgeWeight
+                    heapq.heappush(pq, (dist[adjNode], adjNode))
+        return dist
+        
+            
+        
+        
