@@ -1,0 +1,78 @@
+91_Dijkstra using Set approach
+
+#why priority queue why not BFS
+#beacuse of shortest path first pick
+#if I choose BFS it will become all paths equal priority
+
+class Solution:
+    # Returns shortest distances from src to all other vertices
+    def dijkstra(self, V, edges, src):
+    
+        # Build adjacency list
+        adj = [[] for _ in range(V)]
+        for u, v, w in edges:
+            adj[u].append((v, w))
+            adj[v].append((u, w))  # remove if directed
+        
+        # Initialize distance array
+        dist = [float('inf')] * V
+        dist[src] = 0
+        
+        # Set stores (distance, node)
+        st = set()
+        st.add((0, src))
+        
+        while st:
+            # Extract node with minimum distance
+            distance, node = min(st)
+            st.remove((distance, node))
+            
+            # Traverse neighbors
+            for adjNode, edgeW in adj[node]:
+                
+                # Relaxation step
+                if distance + edgeW < dist[adjNode]:
+                    
+                    # Remove old entry if exists
+                    if dist[adjNode] != float('inf'):
+                        st.discard((dist[adjNode], adjNode))
+                    
+                    # Update distance
+                    dist[adjNode] = distance + edgeW
+                    st.add((dist[adjNode], adjNode))
+        
+        return dist
+                
+        
+        
+        
+        
+        # adj = [[] for _ in range(V)]
+        
+        # for u, v, w in edges:
+        #     adj[u].append((v, w))
+        #     adj[v].append((u, w))
+        
+        # import heapq
+        # pq = []
+        # dist = [float('inf')]*V
+        # dist[src] = 0
+        
+        # heapq.heappush(pq,(0,src))
+        
+        # while pq:
+        #     dis, node = heapq.heappop(pq)
+            
+        #     #skip for outdated entries
+        #     if dis > dist[node]:
+        #         continue
+            
+        #     for adjNode, edgeWeight in adj[node]:
+        #         if dis + edgeWeight < dist[adjNode]:
+        #             dist[adjNode] = dis + edgeWeight
+        #             heapq.heappush(pq, (dist[adjNode], adjNode))
+        # return dist
+        
+            
+        
+        
