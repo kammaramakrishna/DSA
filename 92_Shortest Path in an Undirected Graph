@@ -1,0 +1,53 @@
+92_Shortest Path in an Undirected Graph
+
+#User function Template for python3
+from typing import List
+import heapq
+class Solution:
+    def shortestPath(self,n:int, m:int, edges:List[List[int]] )->List[int]:
+        # code here
+        adj = [[] for _ in range(n+1)]
+        for i in edges:
+            adj[i[0]].append((i[1],i[2]))
+            adj[i[1]].append((i[0], i[2]))
+        
+        #paritiy queue is used to store the distance
+        pq = [(0,1)]
+        dist = [float('inf')]*(n+1)
+        parent = [i for i in range(n+1)]
+        
+        #set distance of source to be 1
+        dist[1] = 0
+        while pq:
+            dis, node = heapq.heappop(pq)
+            
+            if dis > dist[node]:
+                continue
+            
+            for adjNode, edgeW in adj[node]:
+                if (dis + edgeW) < dist[adjNode]:
+                    dist[adjNode] = dis + edgeW
+                    heapq.heappush(pq, (dist[adjNode], adjNode))
+                    parent[adjNode] = node
+        
+        #if there is no path then return -1
+        if dist[n] == float('inf'):
+            return [-1]
+        
+        
+        #Print the final path backtracking from destination to source
+        path = []
+        node = n
+        while parent[node] != node:
+            path.append(node)
+            node = parent[node]
+        path.append(1) #add source node to path
+        
+        #to get source to destination
+        path.reverse()
+        
+        # prepend distance
+        return [dist[n]] + path
+            
+        
+            
