@@ -1,0 +1,48 @@
+93_Shortest Distance in a Binary Maze
+
+#User function Template for python3
+#Priority queuw is not required because it is already soreted in asc order
+#All the distance are asc so we can save log(n)
+from typing import List
+
+class Solution:
+    
+    def shortestPath(self, grid: List[List[int]], source: List[int], destination: List[int]) -> int:
+        # code here
+        if source == destination:
+            return 0
+        
+        #source or destination is blocked
+        if grid[source[0]][source[1]] == 0 or grid[destination[0]][destination[1]] == 0:
+            return -1
+        
+        from collections import deque
+        q = deque()
+        n = len(grid)
+        m = len(grid[0])
+        dist = [[float('inf') for _ in range(m)] for _ in range(n)]
+        
+        q.append((0, source[0], source[1]))
+        dist[source[0]][source[1]] = 0
+        
+        dr = [-1, 0, 1, 0]
+        dc = [0, 1, 0, -1]
+        
+        while q:
+            dis, r, c = q.popleft()
+            
+            for i in range(4):
+                newRow = r + dr[i]
+                newCol = c + dc[i]
+                if (newRow >= 0 and newRow < n and newCol >= 0 
+                and newCol < m and grid[newRow][newCol] == 1 
+                and (dis + 1) < dist[newRow][newCol]):
+                    dist[newRow][newCol] = dis + 1
+                    if newRow == destination[0] and newCol == destination[1]:
+                        return dis + 1
+                    q.append((1 + dis, newRow, newCol))
+        
+        return -1
+                    
+            
+            
