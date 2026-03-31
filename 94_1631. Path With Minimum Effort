@@ -1,0 +1,31 @@
+94_1631. Path With Minimum Effort
+
+class Solution:
+    def minimumEffortPath(self, heights: List[List[int]]) -> int:
+        import heapq
+        pq = []
+        n = len(heights)
+        m = len(heights[0])
+        dist = [[float('inf') for _ in range(m)] for _ in range(n)]
+        dist[0][0] = 0
+
+        heapq.heappush(pq,(0,0,0))
+        dr = [-1, 0, 1, 0]
+        dc = [0, 1, 0, -1]
+        while pq:
+            diff, row, col = heapq.heappop(pq)
+            if row == n-1 and col == m-1:
+                return diff
+            for i in range(4):
+                newRow = row + dr[i]
+                newCol = col + dc[i]
+                if newRow >= 0 and newRow < n and newCol >= 0 and  newCol <m:
+                    newEffort = max(abs(heights[row][col] - heights[newRow][newCol]), diff)
+                    if newEffort < dist[newRow][newCol]:
+                        dist[newRow][newCol] = newEffort
+                        heapq.heappush(pq, (dist[newRow][newCol], newRow, newCol))
+        return 0
+
+
+
+        
